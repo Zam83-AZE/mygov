@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SİMA Giriş Paneli</title>
+    <title>SİMA Ağıllı Yönləndirmə</title>
     <style>
         :root { --primary: #0052cc; --success: #28a745; }
         body {
@@ -12,65 +12,91 @@
         }
         .card {
             background: white; padding: 30px; border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1); max-width: 400px; width: 90%; text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1); max-width: 420px; width: 92%; text-align: center;
         }
         .steps {
-            text-align: left; background: #f8f9fa; padding: 15px;
-            border-radius: 12px; margin: 20px 0; border-left: 5px solid var(--primary); font-size: 14px;
+            text-align: left; background: #f8f9fa; padding: 18px;
+            border-radius: 12px; margin: 20px 0; border-left: 5px solid var(--primary); font-size: 14px; line-height: 1.6;
         }
         .btn {
             display: block; width: 100%; padding: 18px; border: none;
             border-radius: 12px; font-size: 16px; font-weight: bold;
-            cursor: pointer; transition: 0.3s; color: white; background-color: var(--primary);
+            cursor: pointer; transition: 0.3s; color: white;
         }
-        .status-msg { display: none; margin-top: 20px; color: var(--success); font-weight: bold; }
+        #startBtn { background-color: var(--primary); }
+        #redirectUI { display: none; }
+        
+        /* Animasiya */
+        .pulse { animation: pulse-green 2s infinite; background-color: var(--success); }
+        @keyframes pulse-green {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+            70% { transform: scale(1.03); box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+        }
+        .loader {
+            border: 4px solid #f3f3f3; border-top: 4px solid var(--success);
+            border-radius: 50%; width: 40px; height: 40px;
+            animation: spin 1s linear infinite; margin: 20px auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>Məlumatların Alınması</h2>
+    <h2 id="headerText">Sistemə Giriş</h2>
     
-    <div id="ui-initial">
+    <div id="ui-start">
         <div class="steps">
             1. <b>"Girişi Başlat"</b> düyməsinə basın.<br>
-            2. Açılan səhifədə <b>☰ Menyu -> Daxil ol -> SİMA</b> ardıcıllığı ilə giriş edin.<br>
-            3. Təsdiq bitdikdən sonra <b>sadəcə bura qayıdın.</b>
+            2. <b>my.gov.az</b>-da SİMA ilə girişi bitirin.<br>
+            3. Giriş bitdikdən sonra <b>sadəcə bura qayıdın.</b>
         </div>
-        <button class="btn" onclick="start()">Girişi Başlat</button>
+        <button id="startBtn" class="btn" onclick="processStart()">Girişi Başlat</button>
     </div>
 
-    <div id="ui-waiting" class="status-msg">
-        <p>Giriş tamamlanıb? <br> Məlumatlara yönləndirilirsiniz...</p>
+    <div id="redirectUI">
+        <div class="loader"></div>
+        <p id="statusMsg">Giriş tamamlanıb? Məlumatlara yönləndirilirsiniz...</p>
+        <button class="btn pulse" onclick="forceRedirect()">Məlumatları İndi Göstər</button>
+        <p style="font-size: 12px; color: #888; margin-top: 15px;">Yönləndirmə avtomatik baş verməsə, yuxarıdakı düyməyə basın.</p>
     </div>
 </div>
 
 <script>
     const targetUrl = 'https://my.gov.az/history/consent/companies/104';
-    
-    function start() {
-        // Prosesin başladığını işarələyirik
-        sessionStorage.setItem('is_authenticating', 'true');
-        
-        // Portalı yeni tabda açırıq
+
+    // Səhifə yüklənəndə (və ya yenilənəndə) yoxlayırıq
+    window.onload = function() {
+        if (localStorage.getItem('auth_in_progress') === 'true') {
+            showWaitingUI();
+        }
+    };
+
+    function processStart() {
+        localStorage.setItem('auth_in_progress', 'true');
         window.open('https://my.gov.az/settings', '_blank');
-        
-        // Görünüşü dəyişirik
-        document.getElementById('ui-initial').style.display = 'none';
-        document.getElementById('ui-waiting').style.display = 'block';
+        showWaitingUI();
     }
 
-    // Əsas hissə: İstifadəçi taba geri qayıdan kimi işə düşür
+    function showWaitingUI() {
+        document.getElementById('ui-start').style.display = 'none';
+        document.getElementById('redirectUI').style.display = 'block';
+        document.getElementById('headerText').innerText = "Giriş Yoxlanılır";
+    }
+
+    // Taba qayıdan kimi (visibilitychange) avtomatik yönləndirmə
     document.addEventListener("visibilitychange", function() {
-        if (!document.hidden && sessionStorage.getItem('is_authenticating') === 'true') {
-            // Sessiyanı yoxlamaq əvəzinə birbaşa hədəfə atırıq
-            // Çünki kuki (session) artıq brauzerdədir
-            setTimeout(() => {
-                sessionStorage.removeItem('is_authenticating');
-                window.location.href = targetUrl;
-            }, 500); // Kiçik gecikmə sessiyanın tam oturması üçün
+        if (!document.hidden && localStorage.getItem('auth_in_progress') === 'true') {
+            // Sessiyanın (kuki) brauzerdə oturması üçün 2 saniyə gözləyirik
+            setTimeout(forceRedirect, 2000); 
         }
     });
+
+    function forceRedirect() {
+        localStorage.removeItem('auth_in_progress');
+        window.location.href = targetUrl;
+    }
 </script>
 
 </body>
