@@ -3,105 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SİMA Giriş Sistemi</title>
+    <title>Məlumat Portalı - SİMA</title>
     <style>
-        :root { --primary: #0052cc; --success: #28a745; }
+        :root { --primary: #0052cc; --success: #28a745; --gray: #6c757d; }
         body {
             font-family: -apple-system, system-ui, sans-serif;
             background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
         }
         .card {
-            background: white; padding: 30px; border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1); max-width: 400px; width: 90%; text-align: center;
+            background: white; padding: 30px; border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1); max-width: 420px; width: 92%; text-align: center;
+        }
+        .instruction-box {
+            text-align: left; background: #f8f9fa; padding: 15px;
+            border-radius: 12px; margin: 20px 0; border-left: 5px solid var(--primary); font-size: 14px;
         }
         .btn {
             display: block; width: 100%; padding: 18px; border: none;
             border-radius: 12px; font-size: 16px; font-weight: bold;
-            cursor: pointer; transition: 0.3s; color: white;
+            cursor: pointer; transition: 0.3s; color: white; margin-bottom: 10px;
         }
         #startBtn { background-color: var(--primary); }
-        #waitingUI { display: none; }
-        .loader {
-            border: 4px solid #f3f3f3; border-top: 4px solid var(--success);
-            border-radius: 50%; width: 40px; height: 40px;
-            animation: spin 1s linear infinite; margin: 20px auto;
+        #companyBtn { background-color: var(--success); display: none; }
+        #resetBtn { background-color: transparent; color: var(--gray); font-size: 12px; display: none; text-decoration: underline; }
+        
+        .badge {
+            background: #e7f5ff; color: var(--primary); padding: 5px 10px;
+            border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 10px; display: inline-block;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2 id="mainTitle">SİMA Giriş</h2>
+    <div id="badge-info" class="badge">Addım 1: Giriş</div>
+    <h2 id="title">Məlumatların Alınması</h2>
     
-    <div id="startUI">
-        <p style="text-align: left; font-size: 14px; background: #f8f9fa; padding: 15px; border-radius: 10px; border-left: 4px solid var(--primary);">
-            1. Aşağıdakı düymə ilə girişi başladın.<br>
-            2. <b>my.gov.az</b>-da SİMA təsdiqini bitirin.<br>
-            3. Giriş bitən kimi bura qayıdın.
-        </p>
-        <button id="startBtn" class="btn" onclick="initiateAuth()">Girişi Başlat</button>
+    <div id="step-desc" class="instruction-box">
+        1. <b>"Girişi Başlat"</b> düyməsinə basın.<br>
+        2. SİMA ilə təsdiqi tamamlayın.<br>
+        3. Giriş bitdikdən sonra <b>bura qayıdın.</b>
     </div>
 
-    <div id="waitingUI">
-        <div class="loader"></div>
-        <p>Giriş tamamlanıb? <br><b>Məlumatlara yönləndirilirsiniz...</b></p>
-        <button class="btn" style="background-color: var(--success);" onclick="manualRedirect()">Məlumatları Göstər</button>
-        <p style="font-size: 11px; color: #888; margin-top: 15px;">Əgər avtomatik keçid olmazsa, yaşıl düyməyə basın.</p>
-    </div>
+    <button id="startBtn" class="btn" onclick="handleStart()">Girişi Başlat</button>
+
+    <button id="companyBtn" class="btn" onclick="handleRedirect()">Məlumatları Göstər</button>
+
+    <button id="resetBtn" class="btn" onclick="resetProcess()">Yenidən Başlat</button>
 </div>
 
 <script>
-    const TARGET_URL = 'https://my.gov.az/history/consent/companies/104';
+    const SETTINGS_URL = 'https://my.gov.az/settings';
+    const COMPANY_URL = 'https://my.gov.az/history/consent/companies/104';
 
-    // Səhifə hər dəfə açılanda və ya qayıdanda işləyən funksiya
-    function checkState() {
-        if (localStorage.getItem('auth_process_running') === 'true') {
-            showWaitingMode();
-            // Taba qayıdandan 1 saniyə sonra dərhal yönləndirməyə çalış
-            setTimeout(manualRedirect, 1000);
-        }
-    }
-
-    function initiateAuth() {
-        // Qalıcı yaddaşa yazırıq
-        localStorage.setItem('auth_process_running', 'true');
-        window.open('https://my.gov.az/settings', '_blank');
-        showWaitingMode();
-    }
-
-    function showWaitingMode() {
-        document.getElementById('startUI').style.display = 'none';
-        document.getElementById('waitingUI').style.display = 'block';
-        document.getElementById('mainTitle').innerText = "Giriş Gözlənilir";
-    }
-
-    function manualRedirect() {
-        if (localStorage.getItem('auth_process_running') === 'true') {
-            localStorage.removeItem('auth_process_running'); // Prosesi bitiririk
-            window.location.href = TARGET_URL;
-        }
-    }
-
-    // 1. Səhifə yüklənəndə (məsələn, linkə yenidən basanda)
+    // Səhifə yüklənəndə və ya qayıdanda vəziyyəti yoxla
     window.onload = checkState;
-
-    // 2. Taba geri qayıdanda (məsələn, SİMA-dan sonra)
-    document.addEventListener("visibilitychange", function() {
-        if (!document.hidden) checkState();
-    });
-
-    // 3. Pəncərə fokus qazananda
     window.onfocus = checkState;
 
-    // 4. Ehtiyat olaraq: Əgər tab açıq qalıbsa, hər 2 saniyədən bir yoxla
-    setInterval(function() {
-        if (!document.hidden && localStorage.getItem('auth_process_running') === 'true') {
-            // Yalnız istifadəçi ekrandadırsa avtomatik keçid etsin
-            manualRedirect();
+    function checkState() {
+        if (localStorage.getItem('auth_step') === 'active') {
+            showStepTwo();
         }
-    }, 2000);
+    }
 
+    function handleStart() {
+        localStorage.setItem('auth_step', 'active');
+        window.open(SETTINGS_URL, '_blank');
+        showStepTwo();
+    }
+
+    function showStepTwo() {
+        document.getElementById('startBtn').style.display = 'none';
+        document.getElementById('companyBtn').style.display = 'block';
+        document.getElementById('resetBtn').style.display = 'block';
+        document.getElementById('badge-info').innerText = "Addım 2: Məlumatın Alınması";
+        document.getElementById('badge-info').style.color = 'var(--success)';
+        document.getElementById('badge-info').style.background = '#ebfbee';
+        document.getElementById('step-desc').innerHTML = "Giriş tamamlanıbsa, aşağıdakı düyməyə basın. Əgər data açılmasa, SİMA təsdiqini yenidən yoxlayın.";
+    }
+
+    function handleRedirect() {
+        // Biz kukini yoxlaya bilmirik, amma yönləndirmə özü bir yoxlamadır.
+        // Əgər kuki yoxdursa, portal onu avtomatik login səhifəsinə atacaq.
+        window.location.href = COMPANY_URL;
+    }
+
+    function resetProcess() {
+        localStorage.removeItem('auth_step');
+        location.reload();
+    }
 </script>
 
 </body>
