@@ -3,101 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SİMA Login Təlimatı</title>
+    <title>SİMA Login Təsdiqi</title>
     <style>
+        :root {
+            --primary: #007bff;
+            --success: #28a745;
+            --warning: #ffc107;
+            --dark: #343a40;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
-            background-color: #f0f2f5;
-            text-align: center;
+            color: var(--dark);
         }
+
         .container {
             background: white;
             padding: 30px;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            max-width: 450px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 420px;
             width: 90%;
+            text-align: center;
         }
-        h2 { color: #1a1a1a; margin-bottom: 15px; }
-        
-        .instruction-box {
+
+        .icon-box {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+
+        h2 { margin-bottom: 10px; font-size: 24px; }
+        p { color: #666; font-size: 15px; line-height: 1.6; }
+
+        .guide-box {
             background-color: #fff9db;
-            border-left: 5px solid #fcc419;
+            border-left: 5px solid var(--warning);
             padding: 15px;
-            margin-bottom: 25px;
+            margin: 20px 0;
             text-align: left;
-            font-size: 0.95rem;
-            color: #444;
-            display: none; /* Login düyməsi sıxılana qədər gizli */
+            font-size: 14px;
+            border-radius: 4px;
         }
 
         .btn {
             display: block;
             width: 100%;
             padding: 16px;
-            margin-bottom: 15px;
+            margin-top: 15px;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s, background-color 0.3s;
+            transition: all 0.3s ease;
             text-decoration: none;
         }
 
         #loginBtn {
-            background-color: #007bff;
+            background-color: var(--primary);
             color: white;
         }
-        #loginBtn:hover { background-color: #0056b3; transform: translateY(-2px); }
 
         #dataBtn {
-            background-color: #28a745;
+            background-color: var(--success);
             color: white;
-            display: none;
+            display: none; /* Login başlayana qədər gizli */
+            animation: pulse 2s infinite;
         }
-        #dataBtn:hover { background-color: #218838; transform: translateY(-2px); }
 
-        .hint { font-size: 0.85rem; color: #888; margin-top: 15px; }
-        b { color: #d9480f; }
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
+            70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+        }
+
+        .loading-text { font-size: 13px; color: var(--primary); font-weight: bold; display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <div class="icon-box">🛡️</div>
     <h2>Portal Girişi</h2>
-    <p id="mainText">Məlumatları görmək üçün SİMA ilə giriş tələb olunur.</p>
+    <p id="statusText">Məlumatlarınızı görmək üçün SİMA vasitəsilə girişi tamamlamalısınız.</p>
 
-    <div id="guide" class="instruction-box">
-        <strong>Diqqət!</strong> Açılan pəncərədə yuxarıdan <b>"Digər üsullar"</b> bölməsini seçin və sonra <b>"SİMA İmza ilə"</b> düyməsinə basın.
+    <div class="guide-box">
+        <strong>Təlimat:</strong><br>
+        1. "Digər üsullar" bölməsini seçin.<br>
+        2. "SİMA İmza" ilə girişi tamamlayın.<br>
+        3. <b>Giriş bitdikdə həmin pəncərəni bağlayıb bura qayıdın.</b>
     </div>
 
     <button id="loginBtn" class="btn" onclick="openLogin()">1. Giriş Səhifəsini Aç</button>
-    <button id="dataBtn" class="btn" onclick="openData()">2. Giriş Etmişəm, Datanı Göstər</button>
-
-    <p class="hint">Qeyd: Giriş etdikdən sonra bu səhifəyə qayıdın.</p>
+    <div id="loadingMsg" class="loading-text">Portalda giriş gözlənilir...</div>
+    
+    <button id="dataBtn" class="btn" onclick="redirectToData()">2. Giriş Tamamlandı, Davam Et</button>
 </div>
 
 <script>
-    function openLogin() {
-        // İlk URL olaraq sizin istədiyiniz https://mygovid.gov.az/auth istifadə olunur
-        window.open('https://mygovid.gov.az/auth', '_blank');
+    let authWindow = null;
+    let pollTimer = null;
 
-        // UI dəyişiklikləri
-        document.getElementById('guide').style.display = "block"; // Təlimatı göstər
-        document.getElementById('loginBtn').innerText = "Yenidən Giriş Pəncərəsini Aç";
-        document.getElementById('loginBtn').style.backgroundColor = "#adb5bd";
+    function openLogin() {
+        // Birbaşa login metodlarının olduğu URL
+        const loginUrl = 'https://mygovid.gov.az/auth';
+        authWindow = window.open(loginUrl, '_blank');
+
+        // UI Yeniləmə
+        document.getElementById('loginBtn').innerText = "Yenidən Aç";
+        document.getElementById('loginBtn').style.backgroundColor = "#6c757d";
         document.getElementById('dataBtn').style.display = "block";
-        document.getElementById('mainText').innerText = "Giriş tamamlandıqdan sonra növbəti addıma keçin.";
+        document.getElementById('loadingMsg').style.display = "block";
+        document.getElementById('statusText').innerText = "Zəhmət olmasa, digər tabda girişi tamamlayın.";
+
+        // Mechanism A: Pəncərənin bağlanmasını yoxla
+        if (pollTimer) clearInterval(pollTimer);
+        pollTimer = setInterval(function() {
+            if (authWindow && authWindow.closed) {
+                clearInterval(pollTimer);
+                autoForward();
+            }
+        }, 1000);
     }
 
-    function openData() {
-        // Sessiya eyni brauzerdə olduğu üçün bu keçid işləyəcək
+    // Mechanism B: Taba geri qayıdışı yoxla (Mobil üçün)
+    document.addEventListener("visibilitychange", function() {
+        if (!document.hidden && authWindow !== null) {
+            // İstifadəçi SİMA-dan sonra bizim sayta qayıtdısa
+            handleReturn();
+        }
+    });
+
+    function handleReturn() {
+        document.getElementById('statusText').innerHTML = "<b style='color:var(--success)'>Qayıtdığınız üçün təşəkkürlər!</b> Giriş tamamlandısa davam edin.";
+        document.getElementById('loadingMsg').style.display = "none";
+    }
+
+    function autoForward() {
+        // Pəncərə bağlandığı an avtomatik yönləndirmə cəhdi
+        alert("Giriş pəncərəsi bağlandı. Məlumatlara yönləndirilirsiniz...");
+        redirectToData();
+    }
+
+    function redirectToData() {
+        // Əsas hədəf URL
         window.location.href = 'https://my.gov.az/history/consent/companies/104';
     }
 </script>
