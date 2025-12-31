@@ -3,217 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Embafinans - SİMA Təsdiqləmə Mockup</title>
+    <title>Embafinans - SİMA Təsdiqləmə (Stabil Versiya)</title>
     <style>
-        :root {
-            --emba-blue: #004a99;
-            --emba-orange: #f29100;
-            --emba-gray: #f8f9fa;
-            --success: #28a745;
-        }
-
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--emba-gray);
-        }
-
+        :root { --emba-blue: #004a99; --emba-orange: #f29100; --success: #28a745; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background-color: #f8f9fa; }
+        
         /* Mockup Header */
-        header {
-            background-color: white;
-            padding: 15px 10%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
+        header { background: white; padding: 15px 10%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .logo { font-size: 24px; font-weight: bold; color: var(--emba-blue); text-transform: uppercase; }
 
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--emba-blue);
-            text-transform: uppercase;
-        }
+        /* Hero Mockup */
+        .hero { padding: 80px 10%; text-align: center; background: linear-gradient(135deg, #004a99 0%, #002d5e 100%); color: white; }
+        .verify-btn { background: var(--emba-orange); color: white; padding: 18px 35px; border: none; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; }
 
-        nav a {
-            margin-left: 20px;
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-        }
+        /* MODAL */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-card { background: white; width: 90%; max-width: 420px; border-radius: 20px; overflow: hidden; text-align: center; }
+        .modal-header { background: var(--emba-blue); color: white; padding: 20px; position: relative; }
+        .modal-body { padding: 30px; }
+        
+        .instruction-box { background: #f1f3f5; padding: 15px; border-radius: 12px; text-align: left; margin-bottom: 20px; border-left: 5px solid var(--emba-orange); font-size: 14px; }
+        
+        .action-btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-bottom: 10px; }
+        
+        #modalStartBtn { background: var(--emba-blue); color: white; }
+        #modalDataBtn { background: var(--success); color: white; display: none; }
+        #resetLink { font-size: 12px; color: #888; cursor: pointer; text-decoration: underline; display: none; }
 
-        /* Main Content Mockup */
-        .hero {
-            padding: 100px 10%;
-            text-align: center;
-            background: linear-gradient(135deg, #004a99 0%, #002d5e 100%);
-            color: white;
-        }
-
-        .hero h1 { font-size: 42px; margin-bottom: 20px; }
-
-        /* Esas Düyme */
-        .verify-btn {
-            background-color: var(--emba-orange);
-            color: white;
-            padding: 18px 35px;
-            border: none;
-            border-radius: 50px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(242, 145, 0, 0.4);
-            transition: 0.3s;
-        }
-
-        .verify-btn:hover { transform: translateY(-3px); background-color: #d68100; }
-
-        /* MODAL (DIALOG) STYLES */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            display: none; /* İlkin olaraq gizli */
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-card {
-            background: white;
-            width: 90%;
-            max-width: 450px;
-            border-radius: 20px;
-            overflow: hidden;
-            animation: slideUp 0.3s ease-out;
-        }
-
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        .modal-header {
-            background-color: var(--emba-blue);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            position: relative;
-        }
-
-        .close-modal {
-            position: absolute;
-            right: 20px; top: 15px;
-            font-size: 24px; cursor: pointer; color: white;
-        }
-
-        .modal-body { padding: 30px; text-align: center; }
-
-        .step-box {
-            background: #f1f3f5;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: left;
-            margin-bottom: 20px;
-            border-left: 5px solid var(--emba-orange);
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .action-btn {
-            width: 100%;
-            padding: 16px;
-            border-radius: 10px;
-            border: none;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        #modalStartBtn { background-color: var(--emba-blue); color: white; }
-        #modalDataBtn { background-color: var(--success); color: white; display: none; }
-
-        .footer-text { font-size: 11px; color: #888; margin-top: 15px; }
-
+        /* Animasiya */
+        .pulse { animation: pulse-animation 2s infinite; }
+        @keyframes pulse-animation { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo">Embafinans</div>
-        <nav>
-            <a href="#">Kreditlər</a>
-            <a href="#">Əmanətlər</a>
-            <a href="#">Haqqımızda</a>
-        </nav>
     </header>
 
     <div class="hero">
-        <h1>Kredit Müraciəti İndi Daha Asan</h1>
-        <p>Məlumatlarınızı SİMA vasitəsilə təsdiqləyin və dərhal nəticəni alın.</p>
-        <br>
-        <button class="verify-btn" onclick="toggleModal(true)">SİMA ilə Təsdiqlə</button>
+        <h1>SİMA ilə Kredit Təsdiqi</h1>
+        <p>Prosesin ana saytda necə görünəcəyini test edin.</p>
+        <button class="verify-btn" onclick="toggleModal(true)">Testi Başlat</button>
     </div>
 
     <div id="simaModal" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-header">
-                <span class="close-modal" onclick="toggleModal(false)">&times;</span>
                 <h3 style="margin:0;">SİMA Təsdiqləmə</h3>
             </div>
             <div class="modal-body">
-                <div id="stepInfo" class="step-box">
-                    1. <b>"Portalı Aç"</b> düyməsinə klikləyin.<br>
-                    2. Açılan pəncərədə (☰) menyudan <b>"Daxil ol"</b> seçin.<br>
-                    3. <b>SİMA</b> ilə girişi tamamlayıb bura qayıdın.
+                <div id="stepDesc" class="instruction-box">
+                    1. <b>"Portalı Aç"</b> düyməsinə basın.<br>
+                    2. Girişi bitirdikdən sonra <b>bura qayıdın.</b>
                 </div>
 
-                <button id="modalStartBtn" class="action-btn" onclick="runPortal()">Portalı Aç və Başlat</button>
+                <button id="modalStartBtn" class="action-btn" onclick="runPortal()">1. Portalı Aç və Giriş Et</button>
+                
+                <button id="modalDataBtn" class="action-btn pulse" onclick="goToData()">2. Giriş Tamamlandı, Davam Et</button>
 
-                <button id="modalDataBtn" class="action-btn" onclick="showFinalData()">Məlumatları Təsdiqlə</button>
-
-                <p class="footer-text">Bu əməliyyat rəsmi my.gov.az portalı vasitəsilə həyata keçirilir.</p>
+                <div id="resetLink" onclick="resetFlow()">Yenidən Başlat</div>
             </div>
         </div>
     </div>
 
     <script>
-        const simaModal = document.getElementById('simaModal');
+        const modal = document.getElementById('simaModal');
         const startBtn = document.getElementById('modalStartBtn');
         const dataBtn = document.getElementById('modalDataBtn');
-        const stepInfo = document.getElementById('stepInfo');
+        const resetLink = document.getElementById('resetLink');
+        const stepDesc = document.getElementById('stepDesc');
+
+        // Sehife her defe focus qazananda (taba qayidanda) yoxla
+        window.addEventListener('focus', checkStatus);
+        window.addEventListener('load', checkStatus);
+
+        function checkStatus() {
+            // Eger yaddasda proses aktivdirse, Step 2-ni goster
+            if (localStorage.getItem('sima_active_session') === 'true') {
+                showStepTwoUI();
+                if (modal.style.display !== 'flex') {
+                    toggleModal(true);
+                }
+            }
+        }
 
         function toggleModal(show) {
-            simaModal.style.display = show ? 'flex' : 'none';
-            // Eger baglanirsa sessiyani sifirlamaq olar (opsional)
+            modal.style.display = show ? 'flex' : 'none';
         }
 
         function runPortal() {
-            localStorage.setItem('emba_sima_active', 'true');
+            // Qalici yaddasa yaziriq
+            localStorage.setItem('sima_active_session', 'true');
             window.open('https://my.gov.az/settings', '_blank');
-            
-            // UI deyisikliyi
-            startBtn.innerText = "Yenidən Başlat";
-            startBtn.style.backgroundColor = "#6c757d";
-            dataBtn.style.display = "block";
-            stepInfo.innerHTML = "<b>Portal digər pəncərədə açıldı.</b><br>Giriş tamamlandıqdan sonra yaşıl düyməyə klikləyin.";
+            showStepTwoUI();
         }
 
-        // Taba qayıdışın izlənilməsi
-        window.onfocus = function() {
-            if (localStorage.getItem('emba_sima_active') === 'true') {
-                // Müsteri geri qayitdiqda yasil düymeni vurğulayırıq
-                dataBtn.style.boxShadow = "0 0 20px rgba(40, 167, 69, 0.6)";
-            }
-        };
+        function showStepTwoUI() {
+            startBtn.style.display = 'none';
+            dataBtn.style.display = 'block';
+            resetLink.style.display = 'block';
+            stepDesc.innerHTML = "<b>Giriş tamamlandı?</b><br>Əgər SİMA ilə təsdiq etmisinizsə, aşağıdakı düyməyə klikləyin.";
+            stepDesc.style.borderLeftColor = "var(--success)";
+        }
 
-        function showFinalData() {
-            localStorage.removeItem('emba_sima_active');
+        function goToData() {
+            localStorage.removeItem('sima_active_session');
             window.location.href = 'https://my.gov.az/history/consent/companies/104';
         }
 
-        // Modal xaricini klikleyende baglansin
-        window.onclick = function(event) {
-            if (event.target == simaModal) toggleModal(false);
+        function resetFlow() {
+            localStorage.removeItem('sima_active_session');
+            location.reload();
         }
     </script>
 </body>
