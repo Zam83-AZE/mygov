@@ -3,159 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SİMA Login Təsdiqi</title>
+    <title>SİMA Giriş Təlimatı</title>
     <style>
         :root {
-            --primary: #007bff;
+            --primary: #0052cc;
             --success: #28a745;
-            --warning: #ffc107;
-            --dark: #343a40;
+            --warning: #fcc419;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f9;
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            color: var(--dark);
+            min-height: 100vh;
         }
 
-        .container {
+        .card {
             background: white;
-            padding: 30px;
+            padding: 25px;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            max-width: 420px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+            max-width: 400px;
             width: 90%;
             text-align: center;
         }
 
-        .icon-box {
-            font-size: 50px;
+        h2 { color: #111; margin-bottom: 15px; font-size: 22px; }
+        
+        .instruction-list {
+            text-align: left;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
             margin-bottom: 20px;
+            border-left: 5px solid var(--primary);
         }
 
-        h2 { margin-bottom: 10px; font-size: 24px; }
-        p { color: #666; font-size: 15px; line-height: 1.6; }
-
-        .guide-box {
-            background-color: #fff9db;
-            border-left: 5px solid var(--warning);
-            padding: 15px;
-            margin: 20px 0;
-            text-align: left;
+        .step {
+            display: flex;
+            margin-bottom: 10px;
             font-size: 14px;
-            border-radius: 4px;
+            line-height: 1.4;
+            color: #444;
+        }
+
+        .step-num {
+            background: var(--primary);
+            color: white;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            font-size: 11px;
+            font-weight: bold;
         }
 
         .btn {
             display: block;
             width: 100%;
             padding: 16px;
-            margin-top: 15px;
+            margin-top: 10px;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
             text-decoration: none;
         }
 
-        #loginBtn {
-            background-color: var(--primary);
-            color: white;
+        #startBtn { background-color: var(--primary); color: white; }
+        #dataBtn { 
+            background-color: var(--success); 
+            color: white; 
+            display: none; 
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
         }
 
-        #dataBtn {
-            background-color: var(--success);
-            color: white;
-            display: none; /* Login başlayana qədər gizli */
-            animation: pulse 2s infinite;
+        .alert-box {
+            font-size: 12px;
+            color: #d9480f;
+            background: #fff4e6;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 15px;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
-            70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
-        }
-
-        .loading-text { font-size: 13px; color: var(--primary); font-weight: bold; display: none; }
+        b { color: #000; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="icon-box">🛡️</div>
-    <h2>Portal Girişi</h2>
-    <p id="statusText">Məlumatlarınızı görmək üçün SİMA vasitəsilə girişi tamamlamalısınız.</p>
-
-    <div class="guide-box">
-        <strong>Təlimat:</strong><br>
-        1. "Digər üsullar" bölməsini seçin.<br>
-        2. "SİMA İmza" ilə girişi tamamlayın.<br>
-        3. <b>Giriş bitdikdə həmin pəncərəni bağlayıb bura qayıdın.</b>
+<div class="card">
+    <h2>Məlumatların Alınması</h2>
+    
+    <div class="instruction-list">
+        <div class="step">
+            <span class="step-num">1</span>
+            <span>Açılan səhifədə (Settings) <b>hamburger menyusuna (☰)</b> toxunun.</span>
+        </div>
+        <div class="step">
+            <span class="step-num">2</span>
+            <span>Menyunun aşağısındakı <b>"Daxil ol"</b> düyməsini sıxın.</span>
+        </div>
+        <div class="step">
+            <span class="step-num">3</span>
+            <span><b>"Digər üsullar"</b> -> <b>"SİMA"</b> seçib girişi tamamlayın.</span>
+        </div>
+        <div class="step">
+            <span class="step-num">4</span>
+            <span>Giriş uğurlu olduqda həmin <b>pəncərəni bağlayıb</b> bura qayıdın.</span>
+        </div>
     </div>
 
-    <button id="loginBtn" class="btn" onclick="openLogin()">1. Giriş Səhifəsini Aç</button>
-    <div id="loadingMsg" class="loading-text">Portalda giriş gözlənilir...</div>
+    <button id="startBtn" class="btn" onclick="openPortal()">1. Prosesi Başlat</button>
     
-    <button id="dataBtn" class="btn" onclick="redirectToData()">2. Giriş Tamamlandı, Davam Et</button>
+    <button id="dataBtn" class="btn" onclick="goToData()">2. Giriş Tamamlandı, Məlumatı Gör</button>
+
+    <div class="alert-box">
+        ⚠️ <b>Vacib:</b> Giriş pəncərəsi bağlandıqda məlumatlar avtomatik yüklənəcək.
+    </div>
 </div>
 
 <script>
-    let authWindow = null;
-    let pollTimer = null;
+    let portalWindow = null;
+    let monitorInterval = null;
 
-    function openLogin() {
-        // Birbaşa login metodlarının olduğu URL
-        const loginUrl = 'https://mygovid.gov.az/auth';
-        authWindow = window.open(loginUrl, '_blank');
+    function openPortal() {
+        // Prosesi birbaşa Settings səhifəsindən başladırıq
+        portalWindow = window.open('https://my.gov.az/settings', '_blank');
 
-        // UI Yeniləmə
-        document.getElementById('loginBtn').innerText = "Yenidən Aç";
-        document.getElementById('loginBtn').style.backgroundColor = "#6c757d";
+        // UI dəyişiklikləri
+        document.getElementById('startBtn').innerText = "Yenidən Başlat";
+        document.getElementById('startBtn').style.opacity = "0.7";
         document.getElementById('dataBtn').style.display = "block";
-        document.getElementById('loadingMsg').style.display = "block";
-        document.getElementById('statusText').innerText = "Zəhmət olmasa, digər tabda girişi tamamlayın.";
 
-        // Mechanism A: Pəncərənin bağlanmasını yoxla
-        if (pollTimer) clearInterval(pollTimer);
-        pollTimer = setInterval(function() {
-            if (authWindow && authWindow.closed) {
-                clearInterval(pollTimer);
-                autoForward();
+        // Pəncərənin bağlanmasını izləyirik
+        if (monitorInterval) clearInterval(monitorInterval);
+        monitorInterval = setInterval(function() {
+            if (portalWindow && portalWindow.closed) {
+                clearInterval(monitorInterval);
+                // Pəncərə bağlanan kimi avtomatik yönləndiririk
+                goToData();
             }
         }, 1000);
     }
 
-    // Mechanism B: Taba geri qayıdışı yoxla (Mobil üçün)
+    // Əgər istifadəçi pəncərəni bağlamadan taba qayıtsa, düyməni vurğulayırıq
     document.addEventListener("visibilitychange", function() {
-        if (!document.hidden && authWindow !== null) {
-            // İstifadəçi SİMA-dan sonra bizim sayta qayıtdısa
-            handleReturn();
+        if (!document.hidden && portalWindow !== null) {
+            document.getElementById('dataBtn').style.animation = "pulse 1.5s infinite";
         }
     });
 
-    function handleReturn() {
-        document.getElementById('statusText').innerHTML = "<b style='color:var(--success)'>Qayıtdığınız üçün təşəkkürlər!</b> Giriş tamamlandısa davam edin.";
-        document.getElementById('loadingMsg').style.display = "none";
-    }
-
-    function autoForward() {
-        // Pəncərə bağlandığı an avtomatik yönləndirmə cəhdi
-        alert("Giriş pəncərəsi bağlandı. Məlumatlara yönləndirilirsiniz...");
-        redirectToData();
-    }
-
-    function redirectToData() {
-        // Əsas hədəf URL
+    function goToData() {
+        // Login sessiyası artıq aktivdir, birbaşa hədəfə gedirik
         window.location.href = 'https://my.gov.az/history/consent/companies/104';
     }
 </script>
+
+<style>
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.03); }
+        100% { transform: scale(1); }
+    }
+</style>
 
 </body>
 </html>
