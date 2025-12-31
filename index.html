@@ -3,172 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SİMA Giriş Proseduru</title>
+    <title>SİMA Ağıllı Keçid</title>
     <style>
-        :root {
-            --primary: #0052cc;
-            --success: #28a745;
-            --warning: #fcc419;
-        }
-
+        :root { --primary: #0052cc; --success: #28a745; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: #f0f2f5;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
         }
-
         .card {
-            background: white;
-            padding: 30px;
-            border-radius: 24px;
-            box-shadow: 0 15px 45px rgba(0,0,0,0.1);
-            max-width: 450px;
-            width: 92%;
-            text-align: center;
+            background: white; padding: 30px; border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1); max-width: 400px; width: 90%; text-align: center;
         }
-
-        h2 { color: #111; margin-bottom: 20px; font-size: 24px; }
-        
-        .steps-box {
-            text-align: left;
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 16px;
-            margin-bottom: 25px;
-            border-left: 6px solid var(--primary);
+        .step-box {
+            text-align: left; background: #f8f9fa; padding: 15px;
+            border-radius: 12px; margin: 20px 0; border-left: 5px solid var(--primary);
         }
-
-        .step-row {
-            display: flex;
-            margin-bottom: 15px;
-            font-size: 15px;
-            line-height: 1.5;
-            color: #333;
-        }
-
-        .step-circle {
-            background: var(--primary);
-            color: white;
-            min-width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 12px;
-            font-size: 13px;
-            font-weight: bold;
-        }
-
         .btn {
-            display: block;
-            width: 100%;
-            padding: 18px;
-            margin-top: 10px;
-            border: none;
-            border-radius: 12px;
-            font-size: 17px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            text-decoration: none;
+            display: block; width: 100%; padding: 18px; border: none;
+            border-radius: 12px; font-size: 16px; font-weight: bold;
+            cursor: pointer; transition: 0.3s; text-decoration: none;
         }
-
-        #actionBtn { background-color: var(--primary); color: white; }
-        #finalBtn { 
-            background-color: var(--success); 
-            color: white; 
-            display: none; 
-            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
-            animation: pulse 2s infinite;
+        #startBtn { background-color: var(--primary); color: white; }
+        #statusArea { display: none; margin-top: 20px; }
+        .loader {
+            border: 4px solid #f3f3f3; border-top: 4px solid var(--success);
+            border-radius: 50%; width: 30px; height: 30px;
+            animation: spin 1s linear infinite; margin: 10px auto;
         }
-
-        .info-note {
-            font-size: 13px;
-            color: #d9480f;
-            background: #fff4e6;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 20px;
-            font-weight: 500;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        b { color: #d9480f; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>Sistemə Giriş</h2>
+    <h2>Məlumatların Alınması</h2>
     
-    <div class="steps-box">
-        <div class="step-row">
-            <span class="step-circle">1</span>
-            <span>Açılan səhifədə yuxarıdakı <b>hamburger menyunu (☰)</b> klikləyin.</span>
+    <div id="instructionGroup">
+        <div class="step-box">
+            1. <b>"Portalı Aç"</b> düyməsinə basın.<br>
+            2. Açılan pəncərədə <b>☰ Menyu -> Daxil ol -> SİMA</b> ardıcıllığını edin.<br>
+            3. Giriş bitdikdən sonra <b>bura qayıdın</b> (və ya WhatsApp linkinə yenidən basın).
         </div>
-        <div class="step-row">
-            <span class="step-circle">2</span>
-            <span>Menyunun aşağı hissəsindəki <b>"Daxil ol"</b> düyməsinə basın.</span>
-        </div>
-        <div class="step-row">
-            <span class="step-circle">3</span>
-            <span><b>"Digər üsullar"</b> bölməsindən <b>SİMA</b>-nı seçib girişi tamamlayın.</span>
-        </div>
-        <div class="step-row">
-            <span class="step-circle">4</span>
-            <span>Giriş etdikdən sonra <b>pəncərəni bağlayıb</b> bura qayıdın.</span>
-        </div>
+        <button id="startBtn" class="btn" onclick="startProcess()">Portalı Aç və Başlat</button>
     </div>
 
-    <button id="actionBtn" class="btn" onclick="startProcess()">1. Portalı Aç</button>
-    <button id="finalBtn" class="btn" onclick="finishProcess()">2. Giriş Tamamlandı, Məlumatı Gör</button>
-
-    <div class="info-note">
-        ⚠️ <b>Diqqət:</b> Giriş pəncərəsini bağladığınızda məlumatlar avtomatik yüklənəcək.
+    <div id="statusArea">
+        <div class="loader"></div>
+        <p>Sizin qayıtmağınız gözlənilir...<br><small>Qayıtdığınız an məlumatlar avtomatik açılacaq.</small></p>
     </div>
 </div>
 
 <script>
-    let myWindow = null;
-    let timer = null;
-
+    const targetUrl = 'https://my.gov.az/history/consent/companies/104';
+    
+    // Prosesin başlayıb-başlamadığını yadda saxlayırıq (LocalStorage ilə)
     function startProcess() {
-        // Sizin istədiyiniz başlanğıc nöqtəsi
-        myWindow = window.open('https://my.gov.az/settings', '_blank');
-
-        // Düymələrin vəziyyəti
-        document.getElementById('actionBtn').innerText = "Portalı Yenidən Aç";
-        document.getElementById('actionBtn').style.opacity = "0.6";
-        document.getElementById('finalBtn').style.display = "block";
-
-        // Pəncərənin bağlanmasını izləyirik (Mechanism A)
-        if (timer) clearInterval(timer);
-        timer = setInterval(function() {
-            if (myWindow && myWindow.closed) {
-                clearInterval(timer);
-                finishProcess(); // Avtomatik yönləndirmə
-            }
-        }, 1000);
+        localStorage.setItem('sima_process_active', 'true');
+        window.open('https://my.gov.az/settings', '_blank');
+        
+        document.getElementById('instructionGroup').style.display = 'none';
+        document.getElementById('statusArea').style.display = 'block';
     }
 
-    // Taba geri qayıdışı izləyirik (Mechanism B)
+    // Əgər istifadəçi taba geri qayıdarsa (visibilitychange)
     document.addEventListener("visibilitychange", function() {
-        if (!document.hidden && myWindow !== null) {
-            document.getElementById('finalBtn').style.display = "block";
+        if (!document.hidden && localStorage.getItem('sima_process_active') === 'true') {
+            redirectToTarget();
         }
     });
 
-    function finishProcess() {
-        // Sessiya aktivdirsə birbaşa dataya keçid
-        window.location.href = 'https://my.gov.az/history/consent/companies/104';
+    // Əgər istifadəçi WhatsApp linkinə yenidən basarsa (səhifə yenidən yüklənəndə yoxlayırıq)
+    window.onload = function() {
+        if (localStorage.getItem('sima_process_active') === 'true') {
+            // Əgər proses aktivdirsə, heç nə gözləmədən birbaşa yönləndir
+            redirectToTarget();
+        }
+    };
+
+    function redirectToTarget() {
+        // Prosesi sıfırlayırıq ki, sonsuz döngə olmasın
+        localStorage.removeItem('sima_process_active');
+        
+        // Birbaşa hədəfə yönləndirmə
+        window.location.href = targetUrl;
     }
 </script>
 
