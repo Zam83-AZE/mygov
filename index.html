@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SİMA Login və Data Keçidi</title>
+    <title>SİMA Login Təlimatı</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -12,72 +12,95 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f4f7f9;
+            background-color: #f0f2f5;
             text-align: center;
         }
         .container {
             background: white;
             padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            max-width: 400px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            max-width: 450px;
             width: 90%;
         }
-        h2 { color: #333; margin-bottom: 20px; font-size: 1.2rem; }
-        p { color: #666; font-size: 0.9rem; margin-bottom: 25px; line-height: 1.5; }
+        h2 { color: #1a1a1a; margin-bottom: 15px; }
         
+        .instruction-box {
+            background-color: #fff9db;
+            border-left: 5px solid #fcc419;
+            padding: 15px;
+            margin-bottom: 25px;
+            text-align: left;
+            font-size: 0.95rem;
+            color: #444;
+            display: none; /* Login düyməsi sıxılana qədər gizli */
+        }
+
         .btn {
             display: block;
             width: 100%;
-            padding: 15px;
+            padding: 16px;
             margin-bottom: 15px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.2s, background-color 0.3s;
             text-decoration: none;
         }
 
-        #loginBtn { background-color: #007bff; color: white; }
-        #loginBtn:hover { background-color: #0056b3; }
+        #loginBtn {
+            background-color: #007bff;
+            color: white;
+        }
+        #loginBtn:hover { background-color: #0056b3; transform: translateY(-2px); }
 
-        #dataBtn { background-color: #28a745; color: white; display: none; }
-        #dataBtn:hover { background-color: #218838; }
+        #dataBtn {
+            background-color: #28a745;
+            color: white;
+            display: none;
+        }
+        #dataBtn:hover { background-color: #218838; transform: translateY(-2px); }
 
-        .step-info { font-size: 0.8rem; color: #888; margin-top: 10px; }
+        .hint { font-size: 0.85rem; color: #888; margin-top: 15px; }
+        b { color: #d9480f; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Məlumatların Təsdiqlənməsi</h2>
-    <p id="instruction">Xahiş edirik, əvvəlcə SİMA vasitəsilə <b>my.gov.az</b> portalına giriş edin.</p>
+    <h2>Portal Girişi</h2>
+    <p id="mainText">Məlumatları görmək üçün SİMA ilə giriş tələb olunur.</p>
 
-    <button id="loginBtn" class="btn" onclick="openLogin()">1. SİMA ilə Giriş Et</button>
-    <button id="dataBtn" class="btn" onclick="openData()">2. Məlumatları Gör</button>
+    <div id="guide" class="instruction-box">
+        <strong>Diqqət!</strong> Açılan pəncərədə yuxarıdan <b>"Digər üsullar"</b> bölməsini seçin və sonra <b>"SİMA İmza ilə"</b> düyməsinə basın.
+    </div>
 
-    <div class="step-info" id="statusText">Addım 1: Portalda sessiya açılmalıdır.</div>
+    <button id="loginBtn" class="btn" onclick="openLogin()">1. Giriş Səhifəsini Aç</button>
+    <button id="dataBtn" class="btn" onclick="openData()">2. Giriş Etmişəm, Datanı Göstər</button>
+
+    <p class="hint">Qeyd: Giriş etdikdən sonra bu səhifəyə qayıdın.</p>
 </div>
 
 <script>
-    let loginTab;
-
     function openLogin() {
-        // Login səhifəsini yeni tabda açırıq
-        loginTab = window.open('https://my.gov.az/settings', '_blank');
+        // İlk URL olaraq sizin istədiyiniz https://mygovid.gov.az/auth istifadə olunur
+        window.open('https://mygovid.gov.az/auth', '_blank');
 
-        // UI-da dəyişiklik edirik
-        document.getElementById('loginBtn').innerText = "Giriş Tamamlandı?";
-        document.getElementById('loginBtn').style.backgroundColor = "#6c757d";
+        // UI dəyişiklikləri
+        document.getElementById('guide').style.display = "block"; // Təlimatı göstər
+        document.getElementById('loginBtn').innerText = "Yenidən Giriş Pəncərəsini Aç";
+        document.getElementById('loginBtn').style.backgroundColor = "#adb5bd";
         document.getElementById('dataBtn').style.display = "block";
-        document.getElementById('instruction').innerHTML = "Login tamamlandıqdan sonra aşağıdakı düyməyə basın.";
-        document.getElementById('statusText').innerText = "Addım 2: Sessiya hazırdırsa, datanı çəkə bilərsiniz.";
+        document.getElementById('mainText').innerText = "Giriş tamamlandıqdan sonra növbəti addıma keçin.";
     }
 
     function openData() {
+        // Sessiya eyni brauzerdə olduğu üçün bu keçid işləyəcək
         window.location.href = 'https://my.gov.az/history/consent/companies/104';
     }
-</script> </body>
+</script>
+
+</body>
 </html>
