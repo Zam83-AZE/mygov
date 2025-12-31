@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SİMA Login və Data Keçidi</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f7f9;
+            text-align: center;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 90%;
+        }
+        h2 { color: #333; margin-bottom: 20px; font-size: 1.2rem; }
+        p { color: #666; font-size: 0.9rem; margin-bottom: 25px; line-height: 1.5; }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        #loginBtn { background-color: #007bff; color: white; }
+        #loginBtn:hover { background-color: #0056b3; }
+
+        #dataBtn { background-color: #28a745; color: white; display: none; }
+        #dataBtn:hover { background-color: #218838; }
+
+        .step-info { font-size: 0.8rem; color: #888; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Məlumatların Təsdiqlənməsi</h2>
+    <p id="instruction">Xahiş edirik, əvvəlcə SİMA vasitəsilə <b>my.gov.az</b> portalına giriş edin.</p>
+
+    <button id="loginBtn" class="btn" onclick="openLogin()">1. SİMA ilə Giriş Et</button>
+    <button id="dataBtn" class="btn" onclick="openData()">2. Məlumatları Gör</button>
+
+    <div class="step-info" id="statusText">Addım 1: Portalda sessiya açılmalıdır.</div>
+</div>
+
+<script>
+    let loginTab;
+
+    function openLogin() {
+        // Login səhifəsini yeni tabda açırıq
+        loginTab = window.open('https://my.gov.az/settings', '_blank');
+
+        // UI-da dəyişiklik edirik
+        document.getElementById('loginBtn').innerText = "Giriş Tamamlandı?";
+        document.getElementById('loginBtn').style.backgroundColor = "#6c757d";
+        document.getElementById('dataBtn').style.display = "block";
+        document.getElementById('instruction').innerHTML = "Login tamamlandıqdan sonra aşağıdakı düyməyə basın.";
+        document.getElementById('statusText').innerText = "Addım 2: Sessiya hazırdırsa, datanı çəkə bilərsiniz.";
+    }
+
+    function openData() {
+        window.location.href = 'https://my.gov.az/history/consent/companies/104';
+    }
+</script> </body>
+</html>
