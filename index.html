@@ -3,91 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SİMA Ağıllı Keçid v2</title>
+    <title>SİMA Giriş Paneli</title>
     <style>
         :root { --primary: #0052cc; --success: #28a745; }
         body {
-            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, system-ui, sans-serif;
             background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
         }
         .card {
-            background: white; padding: 30px; border-radius: 24px;
+            background: white; padding: 30px; border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.1); max-width: 400px; width: 90%; text-align: center;
         }
-        .step-box {
+        .steps {
             text-align: left; background: #f8f9fa; padding: 15px;
             border-radius: 12px; margin: 20px 0; border-left: 5px solid var(--primary); font-size: 14px;
         }
         .btn {
             display: block; width: 100%; padding: 18px; border: none;
             border-radius: 12px; font-size: 16px; font-weight: bold;
-            cursor: pointer; transition: 0.3s; text-decoration: none;
+            cursor: pointer; transition: 0.3s; color: white; background-color: var(--primary);
         }
-        #startBtn { background-color: var(--primary); color: white; }
-        #manualBtn { background-color: var(--success); color: white; display: none; margin-top: 10px; }
-        .loading { display: none; margin-top: 20px; color: var(--success); font-weight: bold; }
+        .status-msg { display: none; margin-top: 20px; color: var(--success); font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2 id="title">Məlumat Portalı</h2>
+    <h2>Məlumatların Alınması</h2>
     
-    <div id="mainUI">
-        <div class="step-box">
-            1. Aşağıdakı düymə ilə <b>my.gov.az</b>-a keçin.<br>
-            2. Girişi bitirdikdən sonra <b>WhatsApp-dakı linkə yenidən basın.</b>
+    <div id="ui-initial">
+        <div class="steps">
+            1. <b>"Girişi Başlat"</b> düyməsinə basın.<br>
+            2. Açılan səhifədə <b>☰ Menyu -> Daxil ol -> SİMA</b> ardıcıllığı ilə giriş edin.<br>
+            3. Təsdiq bitdikdən sonra <b>sadəcə bura qayıdın.</b>
         </div>
-        <button id="startBtn" class="btn" onclick="start()">1. Girişi Başlat</button>
+        <button class="btn" onclick="start()">Girişi Başlat</button>
     </div>
 
-    <div id="redirectUI" class="loading">
-        <p>Sessiya yoxlanılır... Yönləndirilirsiniz...</p>
-        <button id="manualBtn" class="btn" onclick="goToTarget()">Məlumatları Göstər</button>
+    <div id="ui-waiting" class="status-msg">
+        <p>Giriş tamamlanıb? <br> Məlumatlara yönləndirilirsiniz...</p>
     </div>
 </div>
 
 <script>
     const targetUrl = 'https://my.gov.az/history/consent/companies/104';
     
-    // Səhifə yüklənəndə URL-də "step=2" olub-olmadığını yoxlayırıq
-    window.onload = function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        
-        // Əgər URL-də step=2 varsa və ya yaddaşda aktivdirsə
-        if (urlParams.get('step') === '2' || localStorage.getItem('sima_active')) {
-            showRedirecting();
-            setTimeout(goToTarget, 1500); // 1.5 saniyə sonra avtomatik keçid
-        }
-    }
-
     function start() {
-        // Yaddaşa qeyd edirik
-        localStorage.setItem('sima_active', 'true');
+        // Prosesin başladığını işarələyirik
+        sessionStorage.setItem('is_authenticating', 'true');
         
-        // WhatsApp-dan təkrar basanda URL-də step=2 görünməsi üçün cari linki dəyişirik
-        const currentUrl = window.location.href.split('?')[0];
-        const newUrlWithStep = currentUrl + "?step=2";
-        
-        // Bu linki müştəri təkrar bassın deyə yaddaşda saxlayırıq (və ya sadəcə təlimatda deyirik)
+        // Portalı yeni tabda açırıq
         window.open('https://my.gov.az/settings', '_blank');
         
-        // UI-ı dəyişirik
-        document.getElementById('mainUI').style.display = 'none';
-        document.getElementById('redirectUI').style.display = 'block';
-        document.getElementById('title').innerText = "Giriş Gözlənilir";
+        // Görünüşü dəyişirik
+        document.getElementById('ui-initial').style.display = 'none';
+        document.getElementById('ui-waiting').style.display = 'block';
     }
 
-    function showRedirecting() {
-        document.getElementById('mainUI').style.display = 'none';
-        document.getElementById('redirectUI').style.display = 'block';
-        document.getElementById('manualBtn').style.display = 'block';
-    }
-
-    function goToTarget() {
-        localStorage.removeItem('sima_active');
-        window.location.href = targetUrl;
-    }
+    // Əsas hissə: İstifadəçi taba geri qayıdan kimi işə düşür
+    document.addEventListener("visibilitychange", function() {
+        if (!document.hidden && sessionStorage.getItem('is_authenticating') === 'true') {
+            // Sessiyanı yoxlamaq əvəzinə birbaşa hədəfə atırıq
+            // Çünki kuki (session) artıq brauzerdədir
+            setTimeout(() => {
+                sessionStorage.removeItem('is_authenticating');
+                window.location.href = targetUrl;
+            }, 500); // Kiçik gecikmə sessiyanın tam oturması üçün
+        }
+    });
 </script>
 
 </body>
