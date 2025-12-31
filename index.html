@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Embafinans - SİMA Onboarding</title>
+    <title>Embafinans - SİMA Onboarding (Responsive)</title>
     <style>
         :root {
             --emba-blue: #1e88e5;
@@ -11,7 +11,10 @@
             --emba-orange: #ffb300;
             --success: #43a047;
             --white: #ffffff;
+            --gray-bg: #f4f7f9;
         }
+
+        * { box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -19,154 +22,173 @@
             padding: 0;
             background: linear-gradient(135deg, #42a5f5 0%, #1e88e5 100%);
             color: var(--white);
-            overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        /* Header Mockup */
+        /* Responsive Header */
         header {
-            padding: 20px 5%;
+            padding: 15px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: transparent;
+            flex-wrap: wrap;
         }
 
-        .logo { font-size: 28px; font-weight: bold; letter-spacing: 1px; }
-        .header-links { display: flex; align-items: center; gap: 20px; font-size: 14px; }
-        .header-links span { cursor: pointer; opacity: 0.9; }
+        .logo { font-size: 24px; font-weight: bold; letter-spacing: 1px; }
+        
+        .header-links { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            font-size: 13px; 
+        }
+
         .btn-kabinet {
             border: 1px solid white;
-            padding: 8px 20px;
+            padding: 6px 15px;
             border-radius: 20px;
             cursor: pointer;
+            white-space: nowrap;
         }
 
-        /* Layout */
+        /* Main Responsive Container */
         .container {
             display: flex;
-            padding: 40px 5%;
-            gap: 50px;
+            padding: 20px 5%;
+            gap: 30px;
+            flex-direction: row; /* Masaüstü üçün yan-yana */
         }
 
-        /* Left Sidebar Menu */
-        .sidebar { width: 300px; }
-        .sidebar h3 { font-size: 22px; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 10px; }
+        /* Sidebar: Mobil üçün yuxarıya qalxacaq */
+        .sidebar { 
+            width: 280px; 
+            flex-shrink: 0;
+        }
+        
+        .sidebar h3 { 
+            font-size: 20px; 
+            margin-bottom: 20px; 
+            border-bottom: 1px solid rgba(255,255,255,0.3); 
+            padding-bottom: 10px; 
+        }
         
         .service-item {
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             cursor: pointer;
-            transition: 0.3s;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .service-item:hover { transform: translateX(10px); }
-        .service-item div { font-size: 16px; font-weight: bold; margin-bottom: 5px; }
-        .service-item span { font-size: 12px; opacity: 0.8; }
 
-        /* Main Hero */
-        .hero-content { flex: 1; text-align: left; }
-        .hero-title { font-size: 48px; font-weight: 800; line-height: 1.2; margin-bottom: 20px; }
+        /* Hero Content */
+        .hero-content { flex: 1; }
+        
+        .hero-title { 
+            font-size: clamp(28px, 5vw, 48px); /* Dinamik font ölçüsü */
+            font-weight: 800; 
+            line-height: 1.2; 
+            margin-bottom: 20px; 
+        }
+        
         .hero-title span { color: var(--emba-orange); }
 
-        /* SİMA Launch Button (Öne çıxarılan) */
         .sima-trigger-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
-            padding: 30px;
+            padding: 25px;
             border-radius: 20px;
             border: 1px solid rgba(255,255,255,0.2);
             max-width: 500px;
-            margin-top: 50px;
         }
 
         .btn-sima {
             background-color: var(--emba-orange);
             color: white;
             border: none;
-            padding: 15px 30px;
+            padding: 16px;
             font-size: 18px;
             font-weight: bold;
             border-radius: 12px;
             cursor: pointer;
             width: 100%;
-            box-shadow: 0 4px 15px rgba(255, 179, 0, 0.4);
             transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 179, 0, 0.3);
         }
-        .btn-sima:hover { background-color: #ffa000; transform: scale(1.02); }
 
-        /* MODAL / DIALOG */
+        /* Responsive Breakpoints */
+        @media (max-width: 992px) {
+            .container { flex-direction: column; }
+            .sidebar { width: 100%; }
+            .hero-content { text-align: center; }
+            .sima-trigger-card { margin: 0 auto; }
+            header { justify-content: center; gap: 20px; }
+        }
+
+        /* Modal Responsivliyi */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.85);
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
+            z-index: 10000;
+            padding: 20px;
         }
 
         .modal-content {
             background: white;
             color: #333;
-            width: 90%;
-            max-width: 480px;
-            border-radius: 25px;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: popIn 0.3s ease-out;
         }
 
-        .modal-header {
-            background: var(--emba-blue);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            font-weight: bold;
-            position: relative;
-        }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } }
 
-        .modal-body { padding: 25px; }
+        .modal-header { background: var(--emba-blue); color: white; padding: 15px; text-align: center; }
+        .modal-body { padding: 20px; }
 
-        /* VİZUAL TƏLİMAT SAHƏSİ */
         .visual-guide {
-            position: relative;
-            background: #eee;
-            border-radius: 15px;
-            height: 220px;
-            margin-bottom: 20px;
+            background: #f1f3f5;
+            height: 180px;
+            border-radius: 12px;
             display: flex;
             justify-content: center;
             align-items: center;
-            border: 2px dashed #ccc;
-            overflow: hidden;
+            margin-bottom: 15px;
+            border: 2px dashed #ddd;
+            position: relative;
+            text-align: center;
+            font-size: 13px;
+            color: #777;
         }
 
-        /* Ox işarəsi simulyasiyası */
-        .visual-arrow {
-            position: absolute;
-            top: 20px; right: 20px;
-            background: var(--emba-orange);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 8px;
-            font-weight: bold;
-            animation: moveArrow 1s infinite alternate;
-            display: none;
+        .instruction-step {
+            background: #fff9db;
+            border-left: 4px solid var(--emba-orange);
+            padding: 12px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            color: #444;
         }
-
-        @keyframes moveArrow { from { transform: translateX(0); } to { transform: translateX(-15px); } }
-
-        .instruction-text { font-size: 14px; margin-bottom: 20px; color: #555; border-left: 4px solid var(--emba-orange); padding-left: 15px; }
 
         .modal-btn {
             width: 100%;
-            padding: 16px;
-            border-radius: 12px;
+            padding: 15px;
+            border-radius: 10px;
             border: none;
             font-weight: bold;
-            cursor: pointer;
             font-size: 16px;
-            transition: 0.3s;
+            cursor: pointer;
         }
-        .btn-go { background: var(--emba-blue); color: white; }
-        .btn-view { background: var(--success); color: white; display: none; }
+        .btn-blue { background: var(--emba-blue); color: white; }
+        .btn-green { background: var(--success); color: white; display: none; }
 
     </style>
 </head>
@@ -176,7 +198,6 @@
     <div class="logo">EmbaFinans</div>
     <div class="header-links">
         <span>AZ | RU | EN</span>
-        <span>*1414</span>
         <div class="btn-kabinet">Şəxsi kabinet</div>
     </div>
 </header>
@@ -185,50 +206,50 @@
     <div class="sidebar">
         <h3>Onlayn xidmətlər</h3>
         <div class="service-item">
-            <div>Kredit üçün onlayn müraciət</div>
+            <div>Kredit müraciəti</div>
             <span>→</span>
         </div>
         <div class="service-item">
-            <div>Kredit üzrə ödəniş etmək</div>
+            <div>Ödəniş etmək</div>
             <span>→</span>
         </div>
         <div class="service-item">
-            <div>Partnyorluq müraciəti</div>
+            <div>Partnyorluq</div>
             <span>→</span>
         </div>
     </div>
 
     <div class="hero-content">
         <div class="hero-title">
-            1 KLİKLƏ ANINDA VƏ <br> <span>KOMİSSİYASIZ ÖDƏNİŞ</span>
+            MƏLUMATLARINIZI <br> <span>SİMA İLƏ TƏSDİQLƏYİN</span>
         </div>
         
         <div class="sima-trigger-card">
-            <p style="margin-top:0;">Məlumatlarınızı SİMA ilə təsdiqləyərək kredit prosesini sürətləndirin.</p>
-            <button class="btn-sima" onclick="openModal()">SİMA İLƏ TƏSDİQLƏ</button>
+            <p style="margin-bottom: 20px; font-size: 15px; line-height: 1.5;">
+                Kredit müraciətinizi tamamlamaq üçün SİMA vasitəsilə biometrik təsdiqləmə tələb olunur.
+            </p>
+            <button class="btn-sima" onclick="openSimaModal()">TƏSDİQLƏMƏNİ BAŞLAT</button>
         </div>
     </div>
 </div>
 
 <div id="simaModal" class="modal-overlay">
     <div class="modal-content">
-        <div class="modal-header">
-            SİMA Təlimatçısı
-        </div>
+        <div class="modal-header">SİMA Təlimatı</div>
         <div class="modal-body">
-            <div class="visual-guide" id="guideContainer">
-                <span id="guidePlaceholder">my.gov.az skrinşotu burada olacaq</span>
-                <div class="visual-arrow" id="visualArrow">Menyunu açın ☰</div>
-            </div>
-
-            <div class="instruction-text" id="instructionTxt">
-                <b>Addım 1:</b> Portalı açın və yuxarı sağ küncdəki menyuya daxil olun.
-            </div>
-
-            <button id="btnStart" class="modal-btn btn-go" onclick="startAuth()">1. Portalı Aç</button>
-            <button id="btnFinal" class="modal-btn btn-view" onclick="finishAuth()">2. Giriş Tamamlandı, Davam Et</button>
             
-            <p style="text-align:center; font-size:11px; margin-top:15px; color:#999; cursor:pointer;" onclick="closeModal()">Ləğv et</p>
+            <div class="visual-guide" id="guideBox">
+                <span id="guideMsg">Portalın görüntüsü <br> (Skrinşot üçün yer)</span>
+            </div>
+
+            <div class="instruction-step" id="stepTxt">
+                <b>Addım 1:</b> Portalı yeni tabda açın və yuxarıdakı menyudan (☰) <b>"Daxil ol"</b> seçin.
+            </div>
+
+            <button id="btnStart" class="modal-btn btn-blue" onclick="handleStart()">1. Portalı Aç</button>
+            <button id="btnFinish" class="modal-btn btn-green" onclick="handleFinish()">2. Giriş Bitdi, Davam Et</button>
+            
+            <p style="text-align:center; font-size:12px; color:#999; margin-top:15px; cursor:pointer;" onclick="closeSimaModal()">Geri qayıt</p>
         </div>
     </div>
 </div>
@@ -236,48 +257,51 @@
 <script>
     const modal = document.getElementById('simaModal');
     const btnStart = document.getElementById('btnStart');
-    const btnFinal = document.getElementById('btnFinal');
-    const arrow = document.getElementById('visualArrow');
-    const instructionTxt = document.getElementById('instructionTxt');
-    const placeholder = document.getElementById('guidePlaceholder');
+    const btnFinish = document.getElementById('btnFinish');
+    const stepTxt = document.getElementById('stepTxt');
+    const guideMsg = document.getElementById('guideMsg');
 
-    function openModal() { modal.style.display = 'flex'; }
-    function closeModal() { modal.style.display = 'none'; }
+    function openSimaModal() { modal.style.display = 'flex'; }
+    function closeSimaModal() { modal.style.display = 'none'; }
 
-    function startAuth() {
-        localStorage.setItem('emba_session', 'active');
+    function handleStart() {
+        // Yaddaşda prosesi aktiv edirik
+        localStorage.setItem('sima_onboarding_active', 'true');
         window.open('https://my.gov.az/settings', '_blank');
         
-        // Modalın içində Addım 2-ni aktiv edirik
-        placeholder.innerText = "Daxil ol bölməsini seçin";
-        arrow.style.display = "block";
-        arrow.innerText = "Daxil ol ⬇️";
-        arrow.style.top = "70%";
-        
-        instructionTxt.innerHTML = "<b>Addım 2:</b> Menyuda 'Daxil ol' düyməsini sıxın və SİMA-nı seçin.";
-        
-        btnStart.style.display = "none";
-        btnFinal.style.display = "block";
+        // Modal daxilində UI dəyişir
+        btnStart.style.display = 'none';
+        btnFinish.style.display = 'block';
+        guideMsg.innerHTML = "<b>İndi SİMA ilə təsdiq edin</b>";
+        stepTxt.innerHTML = "<b>Addım 2:</b> SİMA tətbiqində təsdiq verdikdən sonra bu pəncərəyə qayıdın.";
     }
 
-    // Taba qayıdanda yoxlama (Sizin istədiyiniz stabil düymə məntiqi)
+    // Taba qayıdışın izlənilməsi (Masaüstü və Mobil üçün)
     window.onfocus = function() {
-        if (localStorage.getItem('emba_session') === 'active') {
-            btnFinal.style.boxShadow = "0 0 20px rgba(67, 160, 71, 0.6)";
-            instructionTxt.innerHTML = "<b>Tamamlandı:</b> Əgər giriş etmisinizsə, 'Davam Et' düyməsinə basın.";
+        if (localStorage.getItem('sima_onboarding_active') === 'true') {
+            btnFinish.style.boxShadow = "0 0 15px rgba(67, 160, 71, 0.5)";
+            btnFinish.style.animation = "pulse 1.5s infinite";
         }
     };
 
-    function finishAuth() {
-        localStorage.removeItem('emba_session');
+    function handleFinish() {
+        localStorage.removeItem('sima_onboarding_active');
         window.location.href = 'https://my.gov.az/history/consent/companies/104';
     }
 
-    // Modalın kənarına klikləyəndə bağlanması
+    // Modalın kənarını klikləyəndə bağlanması
     window.onclick = function(event) {
-        if (event.target == modal) closeModal();
+        if (event.target == modal) closeSimaModal();
     }
 </script>
+
+<style>
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+        100% { transform: scale(1); }
+    }
+</style>
 
 </body>
 </html>
