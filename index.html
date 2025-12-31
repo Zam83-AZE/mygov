@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SİMA Sürətli Keçid</title>
+    <title>SİMA Giriş Sistemi</title>
     <style>
         :root { --primary: #0052cc; --success: #28a745; }
         body {
@@ -17,8 +17,9 @@
         .btn {
             display: block; width: 100%; padding: 18px; border: none;
             border-radius: 12px; font-size: 16px; font-weight: bold;
-            cursor: pointer; transition: 0.3s; color: white; background-color: var(--primary);
+            cursor: pointer; transition: 0.3s; color: white;
         }
+        #startBtn { background-color: var(--primary); }
         #waitingUI { display: none; }
         .loader {
             border: 4px solid #f3f3f3; border-top: 4px solid var(--success);
@@ -31,68 +32,76 @@
 <body>
 
 <div class="card">
-    <h2 id="title">SİMA Giriş</h2>
+    <h2 id="mainTitle">SİMA Giriş</h2>
     
     <div id="startUI">
         <p style="text-align: left; font-size: 14px; background: #f8f9fa; padding: 15px; border-radius: 10px; border-left: 4px solid var(--primary);">
-            1. Düyməni sıxıb <b>my.gov.az</b>-a keçin.<br>
-            2. SİMA ilə girişi tamamlayın.<br>
-            3. Giriş bitən kimi <b>bura qayıdın.</b>
+            1. Aşağıdakı düymə ilə girişi başladın.<br>
+            2. <b>my.gov.az</b>-da SİMA təsdiqini bitirin.<br>
+            3. Giriş bitən kimi bura qayıdın.
         </p>
-        <button class="btn" onclick="startAuth()">Girişi Başlat</button>
+        <button id="startBtn" class="btn" onclick="initiateAuth()">Girişi Başlat</button>
     </div>
 
     <div id="waitingUI">
         <div class="loader"></div>
-        <p>Qayıtdığınız üçün təşəkkürlər.<br><b>Məlumatlara yönləndirilirsiniz...</b></p>
-        <button class="btn" style="background-color: var(--success);" onclick="redirectNow()">Keçid Etməsə Bura Basın</button>
+        <p>Giriş tamamlanıb? <br><b>Məlumatlara yönləndirilirsiniz...</b></p>
+        <button class="btn" style="background-color: var(--success);" onclick="manualRedirect()">Məlumatları Göstər</button>
+        <p style="font-size: 11px; color: #888; margin-top: 15px;">Əgər avtomatik keçid olmazsa, yaşıl düyməyə basın.</p>
     </div>
 </div>
 
 <script>
-    const targetUrl = 'https://my.gov.az/history/consent/companies/104';
+    const TARGET_URL = 'https://my.gov.az/history/consent/companies/104';
 
-    function startAuth() {
-        localStorage.setItem('auth_active', 'true');
-        window.open('https://my.gov.az/settings', '_blank');
-        updateUI();
+    // Səhifə hər dəfə açılanda və ya qayıdanda işləyən funksiya
+    function checkState() {
+        if (localStorage.getItem('auth_process_running') === 'true') {
+            showWaitingMode();
+            // Taba qayıdandan 1 saniyə sonra dərhal yönləndirməyə çalış
+            setTimeout(manualRedirect, 1000);
+        }
     }
 
-    function updateUI() {
+    function initiateAuth() {
+        // Qalıcı yaddaşa yazırıq
+        localStorage.setItem('auth_process_running', 'true');
+        window.open('https://my.gov.az/settings', '_blank');
+        showWaitingMode();
+    }
+
+    function showWaitingMode() {
         document.getElementById('startUI').style.display = 'none';
         document.getElementById('waitingUI').style.display = 'block';
-        document.getElementById('title').innerText = "Gözlənilir...";
+        document.getElementById('mainTitle').innerText = "Giriş Gözlənilir";
     }
 
-    // Taba qayıdış anını tutan funksiya
-    function handleReturn() {
-        if (localStorage.getItem('auth_active') === 'true') {
-            // Gecikməni 500ms-ə (yarım saniyə) endirdik ki, müştəri gözləməsin
-            setTimeout(redirectNow, 500);
+    function manualRedirect() {
+        if (localStorage.getItem('auth_process_running') === 'true') {
+            localStorage.removeItem('auth_process_running'); // Prosesi bitiririk
+            window.location.href = TARGET_URL;
         }
     }
 
-    // Brauzerin taba qayıtdığını 2 fərqli yolla yoxlayırıq (daha stabil olması üçün)
+    // 1. Səhifə yüklənəndə (məsələn, linkə yenidən basanda)
+    window.onload = checkState;
+
+    // 2. Taba geri qayıdanda (məsələn, SİMA-dan sonra)
     document.addEventListener("visibilitychange", function() {
-        if (!document.hidden) handleReturn();
+        if (!document.hidden) checkState();
     });
 
-    window.onfocus = function() {
-        handleReturn();
-    };
+    // 3. Pəncərə fokus qazananda
+    window.onfocus = checkState;
 
-    // WhatsApp-dan təkrar klikləmə ehtimalı üçün
-    window.onload = function() {
-        if (localStorage.getItem('auth_active') === 'true') {
-            updateUI();
-            setTimeout(redirectNow, 800);
+    // 4. Ehtiyat olaraq: Əgər tab açıq qalıbsa, hər 2 saniyədən bir yoxla
+    setInterval(function() {
+        if (!document.hidden && localStorage.getItem('auth_process_running') === 'true') {
+            // Yalnız istifadəçi ekrandadırsa avtomatik keçid etsin
+            manualRedirect();
         }
-    };
+    }, 2000);
 
-    function redirectNow() {
-        localStorage.removeItem('auth_active');
-        window.location.href = targetUrl;
-    }
 </script>
 
 </body>
